@@ -53,7 +53,9 @@ class Arianne(sprite.Enemy):
     def attack(self):
         self.speed = 0
         self.raw_image = pygame.image.load("aryanne-attack.png")
-
+        self.t_last_attack = time.time()
+        if time.time() - self.t_last_attack > 5:
+            self.speed = -3
 
 screen = pygame.display.set_mode((1200, 800))
 twilight = sprite.Sprite("twilight.png", 0.05)
