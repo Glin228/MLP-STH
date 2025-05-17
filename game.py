@@ -6,6 +6,7 @@ import math
 from threading import Thread
 import random
 from sys import argv
+import phrases
 
 DEATH_MSG = "They killed Twilight Sparkle. But do not give up! Don't let these bastards and perverts ruin your childhood. (Press Enter to exit)"
 
@@ -50,6 +51,7 @@ class Arianne(sprite.Enemy):
         self.health = 5
         self.speed = -3
         self.t_last_attack = 0
+        self.children[1] = sprite.Label(random.choice(phrases.phrases_aryanne_normal))
     def attack(self):
         self.speed = 0
         self.raw_image = pygame.image.load("aryanne-attack.png")
@@ -57,6 +59,10 @@ class Arianne(sprite.Enemy):
     def stop_attack(self):
         self.speed = -3
         self.raw_image = pygame.image.load("aryanne.png")
+    def change_phrases(self, newstate = "PAIN"):
+        if newstate == self.phrase_state[0]: return
+        self.phrase_state = (newstate, time.time()+8)
+        self.children[1] = sprite.Label(random.choice(eval(f"phrases.phrases_aryanne_{self.phrase_state[0].lower()}")))
 
 screen = pygame.display.set_mode((1200, 800))
 twilight = sprite.Sprite("twilight.png", 0.05)
