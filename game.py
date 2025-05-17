@@ -27,7 +27,7 @@ def spawn_enemies():
     while running:
         x = random.randint(5, 20)
         if time.time()-t0>x:
-            entities.append(Bojack())
+            entities.append(random.choice([Bojack, Arianne])())
             t0 = time.time()
         time.sleep(FPS)
 
@@ -54,8 +54,9 @@ class Arianne(sprite.Enemy):
         self.speed = 0
         self.raw_image = pygame.image.load("aryanne-attack.png")
         self.t_last_attack = time.time()
-        if time.time() - self.t_last_attack > 5:
-            self.speed = -3
+    def stop_attack(self):
+        self.speed = -3
+        self.raw_image = pygame.image.load("aryanne.png")
 
 screen = pygame.display.set_mode((1200, 800))
 twilight = sprite.Sprite("twilight.png", 0.05)
@@ -94,7 +95,7 @@ def check_bullets():
         if not isinstance(a, Bullet): continue
             # if it is not a bullet, do nothing
         for b in entities:
-            if type(b) in [Bojack] and a.collides(b):
+            if type(b) in [Bojack, Arianne] and a.collides(b):
                 #For every bojack horse, normie or space marine
                 b.health-=1
                 particles.append(sprite.BloodParticle(b, a.x, a.y))
@@ -149,6 +150,14 @@ def check_death():
         if type(en) in [Bojack] and en.x < 200:
             die()
 
+def update_aryannes():
+    global entities
+    for a in entities:
+        if type(a) != Arianne:
+            continue
+        if a.t_last_attack-time.time()>5:
+            a.stop_attack()
+
 enemySpawner = Thread(target=spawn_enemies)
 enemySpawner.start()
 last_bullet_shot = 0
@@ -162,6 +171,8 @@ while running:
     screen.blit(bg, (0, 0))
 
     for e in entities[:]:
+        if type(e) == Arianne and random.randint(1, 100) == 42: #Ariannes randomly attack
+            e.attack()
         e.update()
         e.blit(scr=screen)
         if e.check_out_of_bounds((1200, 800)):
@@ -170,14 +181,14 @@ while running:
     for p in particles:
         p.blit(scr=screen)
 
-    check_bullets()
-
     if pygame.mouse.get_pressed()[0] and time.time()-last_bullet_shot>0.1:
         entities.append(Bullet())
         last_bullet_shot = time.time()
         shoot_snd.play()
 
+    check_bullets()
     check_death()
+    update_aryannes()
 
     performance = 0
     while time.time()-t0<=FPS:

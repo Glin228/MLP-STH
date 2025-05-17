@@ -7,6 +7,13 @@ phrases_enemy_normal = [
     "Autism detected!"
 ]
 
+phrases_aryanne_normal = [
+    "Hitler would have loved MLP!",
+    "Aryan race is superrior!",
+    "Aryan ponies forever!",
+
+]
+
 phrases_enemy_pain = [
     "Why don't you love and tolerate me?!",
     "This fandom is so toxic!",
