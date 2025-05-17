@@ -2,6 +2,7 @@
 Are you tired of My Little Pony Haters calling you autist and drawing space marines brutally murdering little ponies? No More!
 ![Хватит это терпеть!](readme/hvatit.jpg "Say no more!")
 ## Installing
+Game binaries will soon be available.
 ### Windows
 First go to python.org website and download the latest version of python. Then install pygame. To do this open cmd.exe and run:
 ```
