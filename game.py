@@ -44,6 +44,17 @@ class Bojack(sprite.Enemy):
         self.health = 5
         self.speed = -2
 
+class Arianne(sprite.Enemy):
+    def __init__(self):
+        super().__init__("aryanne.png", 0.2)
+        self.health = 5
+        self.speed = -3
+        self.t_last_attack = 0
+    def attack(self):
+        self.speed = 0
+        self.raw_image = pygame.image.load("aryanne-attack.png")
+
+
 screen = pygame.display.set_mode((1200, 800))
 twilight = sprite.Sprite("twilight.png", 0.05)
 rifle = sprite.Sprite("rifle.png", 0.1)
