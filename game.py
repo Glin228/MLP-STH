@@ -133,9 +133,10 @@ def die():
     game_over.y = 70
     game_over.x = 600
     while True:
-        if time.time() - t0 > 0.1 and len(shown) < len(DEATH_MSG):
+        if time.time() - t0 > 0.01 and len(shown) < len(DEATH_MSG):
             shown+=DEATH_MSG[len(shown)]
             msg.text = shown
+            t0 = time.time()
         screen.fill((0,0,0))
         msg.blit(scr=screen)
         game_over.blit(scr=screen)
@@ -161,7 +162,7 @@ def update_aryannes():
     for a in entities:
         if type(a) != Arianne:
             continue
-        if a.t_last_attack-time.time()>5:
+        if time.time() - a.t_last_attack > 5:
             a.stop_attack()
 
 enemySpawner = Thread(target=spawn_enemies)
