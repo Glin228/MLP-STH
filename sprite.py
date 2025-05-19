@@ -3,11 +3,32 @@ import time
 import pygame
 from functools import lru_cache
 import random
+
+from mesonbuild.interpreterbase import typed_operator
+from mlt7 import Animation
+
 import phrases
 
 pygame.font.init()
 
-@lru_cache(maxsize=512)
+class Animation:
+    def __init__(self, costumes: list[pygame.Surface] = [], interval = 1):
+        self.t0 = time.time()
+        self.interval = interval
+        self.now = 0
+        self.costumes = costumes
+    def start(self):
+        self.t0 = time.time()
+        return self.costumes[0]
+    def get(self):
+        dt = time.time() - self.t0
+        if dt > self.interval:
+            self.now+=1
+            self.now = self.now%len(self.costumes)
+            self.t0 = time.time()
+        return self.costumes[self.now]
+
+@lru_cache(maxsize=128)
 def render(raw_image, angle, alpha, scale, rwidth, rheight):
     """
     All this is made so that stuff works faster better use C++
@@ -21,10 +42,14 @@ def render(raw_image, angle, alpha, scale, rwidth, rheight):
 class Sprite:
     def __init__(self, image = None, scale = 1):
         if image:
-            self.raw_image = pygame.image.load(image)
+            if type(image) == str:
+                self.raw_image = pygame.image.load(image)
+                self.rwidth, self.rheight = self.raw_image.get_size()
+            elif type(image) == Animation:
+                self.raw_image = image
+                self.rwidth, self.rheight = self.raw_image.start().get_size()
         else:
             self.raw_image = pygame.image.load("icon.png")
-        self.rwidth,self.rheight = self.raw_image.get_size()
         self.scale = scale
         self.alpha = 255
         self.x = 0
@@ -37,7 +62,12 @@ class Sprite:
     def rotate(self, deg):
         self.deg = deg
     def blit(self, scr):
-        image = render(self.raw_image, self.deg, self.alpha, self.scale, self.rwidth, self.rheight)
+        if type(self.raw_image) != Animation:
+            image = render(self.raw_image, self.deg, self.alpha, self.scale, self.rwidth, self.rheight)
+        else:
+            r_img = self.raw_image.get()
+            self.rwidth, self.rheight = r_img.get_size()
+            image = render(r_img, self.deg, self.alpha, self.scale, self.rwidth, self.rheight)
         scr.blit(image, (self.x-image.get_size()[0]/2, self.y-image.get_size()[1]/2))
         if self.children and self.blit_children:
             for s in self.children:

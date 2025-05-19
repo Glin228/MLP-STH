@@ -28,7 +28,7 @@ def spawn_enemies():
     while running:
         x = random.randint(5, 20)
         if time.time()-t0>x:
-            entities.append(random.choice([Bojack, Arianne])())
+            entities.append(random.choice([Avery, Arianne])())
             t0 = time.time()
         time.sleep(FPS)
 
@@ -39,11 +39,14 @@ def calculate_angle(sprite_pos, mouse_pos):
     angle_deg = math.degrees(angle_rad)
     return angle_deg
 
-class Bojack(sprite.Enemy):
+class Avery(sprite.Enemy):
     def __init__(self):
-        super().__init__("bojack.png", 0.2)
+        super().__init__(sprite.Animation(
+            costumes = [pygame.image.load(f"avery-{i}.png") for i in range(1, 4+1)]
+        ), 0.4)
         self.health = 5
         self.speed = -2
+        self.y-=40
 
 class Arianne(sprite.Enemy):
     def __init__(self):
@@ -101,8 +104,8 @@ def check_bullets():
         if not isinstance(a, Bullet): continue
             # if it is not a bullet, do nothing
         for b in entities:
-            if type(b) in [Bojack, Arianne] and a.collides(b):
-                #For every bojack horse, normie or space marine
+            if type(b) in [Avery, Arianne] and a.collides(b):
+                #For every Avery horse, normie or space marine
                 b.health-=1
                 particles.append(sprite.BloodParticle(b, a.x, a.y))
                 entities.remove(a)
@@ -154,7 +157,7 @@ def die():
 def check_death():
     for en in entities:
         #print(id(en), en.collides(twilight))
-        if type(en) in [Bojack] and en.x < 200:
+        if type(en) in [Avery] and en.x < 200:
             die()
 
 def update_aryannes():
@@ -205,7 +208,7 @@ while running:
     l.x = 100
     l.y = 10
     l.blit(scr=screen)
-
+    #print(len(entities))
     t0 = time.time()
 
     for ev in pygame.event.get():
