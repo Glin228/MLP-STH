@@ -1,4 +1,4 @@
-# MLP-STH
+# My Little Pony: Shoot The Haters
 Are you tired of My Little Pony Haters calling you autist and drawing space marines brutally murdering little ponies? No More!
 
 
