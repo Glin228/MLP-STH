@@ -179,7 +179,7 @@ def die():
 def check_death():
     for en in entities:
         #print(id(en), en.collides(twilight))
-        if type(en) in [Avery] and en.x < 200:
+        if type(en) in [Avery, Arianne] and en.x < 200:
             die()
 
 def update_aryannes():
