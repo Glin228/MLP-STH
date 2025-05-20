@@ -83,6 +83,24 @@ class Arianne(sprite.Enemy):
         self.phrase_state = (newstate, time.time()+8)
         self.children[1] = sprite.Label(random.choice(eval(f"phrases.phrases_aryanne_{self.phrase_state[0].lower()}")))
 
+class Manhack(sprite.Enemy):
+    def __init__(self):
+        super().__init__("manhack.png")
+        self.health = 2
+        self.speed = 0
+        self.xv = 0
+        self.yv = -6
+        self.scale = 0.1
+    def update(self):
+        if self.x - twilight.x > 300:
+            self.xv-=0.05
+            if self.yv < 0:
+                self.yv+=0.1
+        else:
+            self.yv+=0.3
+        self.x+=self.xv
+        self.y+=self.yv
+
 screen = pygame.display.set_mode(GFX_MODE)
 twilight = sprite.Sprite("twilight.png", 0.05)
 rifle = sprite.Sprite("rifle.png", 0.1)
@@ -127,7 +145,7 @@ def check_bullets():
         if not isinstance(a, Bullet): continue
             # if it is not a bullet, do nothing
         for b in entities:
-            if type(b) in [Avery, Arianne] and a.collides(b):
+            if type(b) in [Avery, Arianne, Manhack] and a.collides(b):
                 #For every Avery horse, normie or space marine
                 b.health-=1
                 pm.create_blood(a.x, a.y, b.speed)
@@ -181,14 +199,20 @@ def check_death():
         #print(id(en), en.collides(twilight))
         if type(en) in [Avery, Arianne] and en.x < 200:
             die()
+        elif type(en) == Manhack:
+            if en.x < 200 and en.y > 500:
+                die()
 
 def update_aryannes():
     global entities
     for a in entities:
-        if type(a) != Arianne:
-            continue
-        if time.time() - a.t_last_attack > 5:
+        if type(a) == Arianne and time.time() - a.t_last_attack > 2 and a.speed == 0:
+            entities.append(Manhack())
+            entities[-1].x = a.x
+            entities[-1].y = a.y
             a.stop_attack()
+        elif type(a) == Manhack:
+            a.update()
 
 enemySpawner = Thread(target=spawn_enemies)
 enemySpawner.start()
