@@ -8,7 +8,23 @@ import random
 from sys import argv
 import phrases
 
+def load_highscore():
+    try:
+        open("highscore.dat", 'x')
+    except:
+        pass
+    finally:
+        with open("highscore.dat") as F:
+            return int(F.read() or 0)
+
+def save_highscore():
+    if highscore < score:
+        with open("highscore.dat", 'w') as F:
+            F.write(str(score))
+
 DEATH_MSG = "They killed Twilight Sparkle. But do not give up! Don't let these bastards and perverts ruin your childhood. (Press Enter to exit)"
+
+GFX_MODE = (1200, 800)
 
 pygame.mixer.init()
 
@@ -67,21 +83,28 @@ class Arianne(sprite.Enemy):
         self.phrase_state = (newstate, time.time()+8)
         self.children[1] = sprite.Label(random.choice(eval(f"phrases.phrases_aryanne_{self.phrase_state[0].lower()}")))
 
-screen = pygame.display.set_mode((1200, 800))
+screen = pygame.display.set_mode(GFX_MODE)
 twilight = sprite.Sprite("twilight.png", 0.05)
 rifle = sprite.Sprite("rifle.png", 0.1)
 rifle.set_pos((160, 710))
 bg = pygame.image.load("bg.png")
 twilight.set_pos((100, 700))
 entities = []
-particles = []
+#particles = []
 FPS = 1/30
 running = True
 enemy_pain_sounds = [pygame.mixer.Sound(f"pain{i}.wav") for i in range(1, 7)]
 shoot_snd = pygame.mixer.Sound("shoot.wav")
 pygame.mixer.music.load("05. Corrupted by Design.mp3")
 if "--nomusic" not in argv: pygame.mixer.music.play()
-blood_particle = pygame.image.load("blood.png")
+#blood_particle = pygame.image.load("blood.png")
+pm = sprite.ParticleManager()
+pygame.mouse.set_visible(False)
+
+score = 0
+score_label = sprite.CustomFontLabel("", font=("Equestria.ttf", 30), color="#B58EBC")
+score_label.x = GFX_MODE[0]/2
+score_label.y = 70
 
 pygame.display.set_caption("MLP Haters killing time!")
 pygame.display.set_icon(pygame.image.load("icon.png"))
@@ -99,7 +122,7 @@ class Bullet(sprite.Sprite):
         self.y-=self.vel*sin(self.deg)
 
 def check_bullets():
-    global entities, particles
+    global entities, score
     for a in entities:
         if not isinstance(a, Bullet): continue
             # if it is not a bullet, do nothing
@@ -107,14 +130,13 @@ def check_bullets():
             if type(b) in [Avery, Arianne] and a.collides(b):
                 #For every Avery horse, normie or space marine
                 b.health-=1
-                particles.append(sprite.BloodParticle(b, a.x, a.y))
+                pm.create_blood(a.x, a.y, b.speed)
                 entities.remove(a)
                 random.choice(enemy_pain_sounds).play()
+                score+=10
                 if b.health <= 0:
                     entities.remove(b)
-                    for p in particles[:]:
-                        if p.parent == b:
-                            particles.remove(p)
+                    score+=100
                 else:
                     b.change_phrases()
                 break
@@ -171,6 +193,7 @@ def update_aryannes():
 enemySpawner = Thread(target=spawn_enemies)
 enemySpawner.start()
 last_bullet_shot = 0
+highscore = load_highscore()
 while running:
     t0 = time.time()
     twilight.blit(scr=screen)
@@ -188,8 +211,7 @@ while running:
         if e.check_out_of_bounds((1200, 800)):
             entities.remove(e)
 
-    for p in particles:
-        p.blit(scr=screen)
+    pm.blit(scr = screen)
 
     if pygame.mouse.get_pressed()[0] and time.time()-last_bullet_shot>0.1:
         entities.append(Bullet())
@@ -203,15 +225,21 @@ while running:
     performance = 0
     while time.time()-t0<=FPS:
         time.sleep(0.005)
+        """
         performance+=1
     l = sprite.Label(f"Performance: {performance}")
     l.x = 100
     l.y = 10
     l.blit(scr=screen)
     #print(len(entities))
+    """
+    score_label.blit(scr=screen)
+    score_label.text = str(score).zfill(6) + f"\n({highscore})"
     t0 = time.time()
 
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             running = False
             del enemySpawner
+
+save_highscore()

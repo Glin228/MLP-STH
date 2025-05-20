@@ -98,6 +98,18 @@ class Label:
         image = self._font.render(self.text, True, self._color, wraplength=self.wraplength)
         scr.blit(image, (self.x-image.get_size()[0]/2, self.y-image.get_size()[1]/2) )
 
+class CustomFontLabel:
+    def __init__(self, text, font: tuple, color = (0, 0, 0)):
+        self.text = text
+        self.x = 0
+        self.y = 0
+        self._font = pygame.font.Font(font[0], size=font[1])
+        self._color = color
+        self.wraplength = 150
+    def blit(self, scr):
+        image = self._font.render(self.text, True, self._color, wraplength=self.wraplength)
+        scr.blit(image, (self.x-image.get_size()[0]/2, self.y-image.get_size()[1]/2) )
+
 class Enemy(Sprite):
     def __init__(self, *args):
         print(f"Initializing enemy with *args: {args}")
@@ -133,3 +145,17 @@ class BloodParticle:
         self.ADJUST_Y = -10
     def blit(self, scr):
         scr.blit(self.image, (self.parent.x-self.dx+self.ADJUST_X, self.parent.y-self.dy+self.ADJUST_Y))
+
+class ParticleManager:
+    def __init__(self):
+        self.blood_particles = []
+        self.blood_images = [pygame.transform.scale(pygame.image.load(f"blood/{i}.png"), (100, 100)) for i in range(1, 30)]
+    def create_blood(self, x, y, parentXV=0):
+        self.blood_particles.append( [x, y, 0, parentXV] )
+    def blit(self, scr):
+        for p in self.blood_particles[:]:
+            scr.blit(self.blood_images[p[2]], (p[0]-50, p[1]-50))
+            p[2]+=1
+            p[0]+=p[3]
+            if p[2] == 29:
+                self.blood_particles.remove(p)
