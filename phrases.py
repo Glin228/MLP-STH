@@ -13,6 +13,15 @@ phrases_aryanne_normal = [
     "Aryan ponies forever!",
 ]
 
+phrases_kosmodesantnik_normal = [
+    "Fear the Xenos!",
+    "For the Emperor!",
+    "Friendship is magic\nand magic is heresy!",
+    "Die you heretic!",
+    "Kill it with fire!",
+    "Emperor doesn't want you alive!"
+]
+
 phrases_enemy_pain = [
     "Why don't you love and tolerate me?!",
     "This fandom is so toxic!",
@@ -25,4 +34,13 @@ phrases_aryanne_pain = [
     "No! You must love and tolerate Hitler!",
     "You're the same race as me!",
     "You're a traitor!",
+]
+
+phrases_kosmodesantnik_pain = [
+    "The emperor protects!",
+    "Pain can't stop me!",
+    "I can still fight!",
+    "It is but a scratch.",
+    "I will not fall!",
+    "I shall endure."
 ]

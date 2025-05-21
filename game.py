@@ -28,7 +28,7 @@ GFX_MODE = (1200, 800)
 
 pygame.mixer.init()
 
-enemies_spawned_total = 0
+#enemies_spawned_total = 0
 
 @lru_cache(1000)
 def sin(angle_deg):
@@ -41,11 +41,13 @@ def cos(angle_deg):
 def spawn_enemies():
     global entities, running
     t0 = time.time()
+    k = 0
     while running:
-        x = random.randint(5, 20)
+        x = random.randint(int(5-k*0.05) if int(5-k*0.05)>2 else 2, int(20-k*0.1) if int(20-k*0.1)>8 else 8)
         if time.time()-t0>x:
-            entities.append(random.choice([Avery, Arianne])())
+            entities.append(random.choice([Avery, Arianne, Doomgay, Kosmodesantnik])())
             t0 = time.time()
+            k+=1
         time.sleep(FPS)
 
 def calculate_angle(sprite_pos, mouse_pos):
@@ -55,6 +57,20 @@ def calculate_angle(sprite_pos, mouse_pos):
     angle_deg = math.degrees(angle_rad)
     return angle_deg
 
+class Kosmodesantnik(sprite.Enemy):
+    def __init__(self):
+        super().__init__(sprite.Animation(
+            costumes=[pygame.image.load(f"kosmodesantnik-{i}.png") for i in range(1, 4 + 1)]
+        ), 4)
+        self.health = 25
+        self.speed = -3
+        self.t_last_attack = 0
+        self.children[1] = sprite.Label(random.choice(phrases.phrases_kosmodesantnik_normal))
+    def change_phrases(self, newstate = "PAIN"):
+        if newstate == self.phrase_state[0]: return
+        self.phrase_state = (newstate, time.time()+8)
+        self.children[1] = sprite.Label(random.choice(eval(f"phrases.phrases_kosmodesantnik_{self.phrase_state[0].lower()}")))
+
 class Avery(sprite.Enemy):
     def __init__(self):
         super().__init__(sprite.Animation(
@@ -62,6 +78,15 @@ class Avery(sprite.Enemy):
         ), 0.4)
         self.health = 5
         self.speed = -2
+        self.y-=40
+
+class Doomgay(sprite.Enemy):
+    def __init__(self):
+        super().__init__(sprite.Animation(
+            costumes = [pygame.image.load(f"doomgay-{i}.png") for i in range(1, 4+1)]
+        ), 4)
+        self.health = 15
+        self.speed = -4
         self.y-=40
 
 class Arianne(sprite.Enemy):
@@ -145,12 +170,15 @@ def check_bullets():
         if not isinstance(a, Bullet): continue
             # if it is not a bullet, do nothing
         for b in entities:
-            if type(b) in [Avery, Arianne, Manhack] and a.collides(b):
+            if type(b) in [Avery, Arianne, Manhack, Doomgay, Kosmodesantnik] and a.collides(b):
                 #For every Avery horse, normie or space marine
                 b.health-=1
-                pm.create_blood(a.x, a.y, b.speed)
+                if type(b) in [Avery, Arianne, Doomgay]:
+                    pm.create_blood(a.x, a.y, b.speed)
+                    random.choice(enemy_pain_sounds).play()
+                else:
+                    pm.create_explosion(a.x, a.y)
                 entities.remove(a)
-                random.choice(enemy_pain_sounds).play()
                 score+=10
                 if b.health <= 0:
                     entities.remove(b)
@@ -197,10 +225,10 @@ def die():
 def check_death():
     for en in entities:
         #print(id(en), en.collides(twilight))
-        if type(en) in [Avery, Arianne] and en.x < 200:
+        if type(en) in [Avery, Arianne, Doomgay, Kosmodesantnik] and en.collides(twilight):
             die()
         elif type(en) == Manhack:
-            if en.x < 200 and en.y > 500:
+            if en.collides(twilight):
                 die()
 
 def update_aryannes():

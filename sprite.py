@@ -4,9 +4,6 @@ import pygame
 from functools import lru_cache
 import random
 
-from mesonbuild.interpreterbase import typed_operator
-from mlt7 import Animation
-
 import phrases
 
 pygame.font.init()
@@ -34,7 +31,7 @@ def render(raw_image, angle, alpha, scale, rwidth, rheight):
     All this is made so that stuff works faster better use C++
     """
     image = raw_image
-    image = pygame.transform.smoothscale(image, (rwidth * scale, rheight * scale))
+    image = pygame.transform.scale(image, (rwidth * scale, rheight * scale))
     image = pygame.transform.rotate(image, angle)
     image.set_alpha(alpha)
     return image
@@ -149,9 +146,13 @@ class BloodParticle:
 class ParticleManager:
     def __init__(self):
         self.blood_particles = []
+        self.explosion_particles = []
         self.blood_images = [pygame.transform.scale(pygame.image.load(f"blood/{i}.png"), (100, 100)) for i in range(1, 30)]
+        self.explosion_images = [pygame.transform.scale(pygame.image.load(f"explosion/{i}.gif"), (100, 100)) for i in range(0, 17)]
     def create_blood(self, x, y, parentXV=0):
         self.blood_particles.append( [x, y, 0, parentXV] )
+    def create_explosion(self, x, y):
+        self.explosion_particles.append([x, y, 0])
     def blit(self, scr):
         for p in self.blood_particles[:]:
             scr.blit(self.blood_images[p[2]], (p[0]-50, p[1]-50))
@@ -159,3 +160,8 @@ class ParticleManager:
             p[0]+=p[3]
             if p[2] == 29:
                 self.blood_particles.remove(p)
+        for p in self.explosion_particles[:]:
+            scr.blit(self.explosion_images[p[2]], (p[0]-50, p[1]-50))
+            p[2]+=1
+            if p[2] == 16:
+                self.explosion_particles.remove(p)
