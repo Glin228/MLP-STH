@@ -28,7 +28,7 @@ STORY = [
     "Also they use magic and this is prohibited by the emperor (because of course it is) => ponies are bad.",
     "Ponies are bad => They must all be exterminated.",
     "Very soon after the beginning of the invasion it became obvious that while friendship may be magic in this universe",
-    "those who want to kill you can't be neither loved nor tolerated. "
+    "those who want to kill ponies can't be neither loved nor tolerated. "
 ]
 
 def show_story():
