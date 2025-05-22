@@ -127,6 +127,10 @@ class Manhack(sprite.Enemy):
         self.y+=self.yv
 
 screen = pygame.display.set_mode(GFX_MODE)
+import intro
+pygame.mixer.music.load("07. She is Young, She is Beautiful, She is Next.mp3")
+if "--nomusic" not in argv: pygame.mixer.music.play()
+intro.show()
 twilight = sprite.Sprite("twilight.png", 0.05)
 rifle = sprite.Sprite("rifle.png", 0.1)
 rifle.set_pos((160, 710))
@@ -295,3 +299,5 @@ while running:
             del enemySpawner
 
 save_highscore()
+import os
+os._exit(0)

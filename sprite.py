@@ -91,8 +91,9 @@ class Label:
         self._font = pygame.font.SysFont(font[0], font[1])
         self._color = color
         self.wraplength = 150
+        self.bgcolor = None
     def blit(self, scr):
-        image = self._font.render(self.text, True, self._color, wraplength=self.wraplength)
+        image = self._font.render(self.text, True, self._color, wraplength=self.wraplength, bgcolor=self.bgcolor)
         scr.blit(image, (self.x-image.get_size()[0]/2, self.y-image.get_size()[1]/2) )
 
 class CustomFontLabel:
@@ -103,8 +104,9 @@ class CustomFontLabel:
         self._font = pygame.font.Font(font[0], size=font[1])
         self._color = color
         self.wraplength = 150
+        self.bgcolor = None
     def blit(self, scr):
-        image = self._font.render(self.text, True, self._color, wraplength=self.wraplength)
+        image = self._font.render(self.text, True, self._color, wraplength=self.wraplength, bgcolor=self.bgcolor)
         scr.blit(image, (self.x-image.get_size()[0]/2, self.y-image.get_size()[1]/2) )
 
 class Enemy(Sprite):
