@@ -264,7 +264,7 @@ while running:
             e.attack()
         e.update()
         e.blit(scr=screen)
-        if e.check_out_of_bounds((1200, 800)):
+        if e.check_out_of_bounds(GFX_MODE):
             entities.remove(e)
 
     pm.blit(scr = screen)
