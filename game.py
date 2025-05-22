@@ -130,6 +130,8 @@ screen = pygame.display.set_mode(GFX_MODE)
 import intro
 pygame.mixer.music.load("07. She is Young, She is Beautiful, She is Next.mp3")
 if "--nomusic" not in argv: pygame.mixer.music.play()
+pygame.display.set_caption("MLP Haters killing time!")
+pygame.display.set_icon(pygame.image.load("icon.png"))
 intro.show()
 twilight = sprite.Sprite("twilight.png", 0.05)
 rifle = sprite.Sprite("rifle.png", 0.1)
@@ -153,9 +155,6 @@ score_label = sprite.CustomFontLabel("", font=("Equestria.ttf", 30), color="#B58
 score_label.x = GFX_MODE[0]/2
 score_label.y = 70
 
-pygame.display.set_caption("MLP Haters killing time!")
-pygame.display.set_icon(pygame.image.load("icon.png"))
-
 class Bullet(sprite.Sprite):
     def __init__(self):
         super().__init__("bullet.png", scale=0.17)
@@ -168,6 +167,10 @@ class Bullet(sprite.Sprite):
         self.x+=self.vel*cos(self.deg)
         self.y-=self.vel*sin(self.deg)
 
+def add_corpse(original):
+    #Poh zavtra dodelayu
+    pass
+
 def check_bullets():
     global entities, score
     for a in entities:
@@ -177,16 +180,19 @@ def check_bullets():
             if type(b) in [Avery, Arianne, Manhack, Doomgay, Kosmodesantnik] and a.collides(b):
                 #For every Avery horse, normie or space marine
                 b.health-=1
-                if type(b) in [Avery, Arianne, Doomgay]:
+                if type(b) in [Avery, Arianne, Doomgay, Kosmodesantnik]:
                     pm.create_blood(a.x, a.y, b.speed)
                     random.choice(enemy_pain_sounds).play()
                 else:
                     pm.create_explosion(a.x, a.y)
                 entities.remove(a)
                 score+=10
+                add_corpse(b)
                 if b.health <= 0:
                     entities.remove(b)
                     score+=100
+                    if not type(b) == Manhack:
+                        pm.create_gore(b.x, b.y)
                 else:
                     b.change_phrases()
                 break

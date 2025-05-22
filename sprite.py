@@ -1,5 +1,5 @@
 import time
-
+import math
 import pygame
 from functools import lru_cache
 import random
@@ -7,6 +7,14 @@ import random
 import phrases
 
 pygame.font.init()
+
+@lru_cache(1000)
+def sin(angle_deg):
+    return math.sin(math.radians(angle_deg))
+
+@lru_cache(1000)
+def cos(angle_deg):
+    return math.cos(math.radians(angle_deg))
 
 class Animation:
     def __init__(self, costumes: list[pygame.Surface] = [], interval = 1):
@@ -149,8 +157,28 @@ class ParticleManager:
     def __init__(self):
         self.blood_particles = []
         self.explosion_particles = []
+        self.gore_particles = []
         self.blood_images = [pygame.transform.scale(pygame.image.load(f"blood/{i}.png"), (100, 100)) for i in range(1, 30)]
         self.explosion_images = [pygame.transform.scale(pygame.image.load(f"explosion/{i}.gif"), (100, 100)) for i in range(0, 17)]
+        #Gore images for stuff flying up and left
+        self.gore_images_135 = [pygame.transform.scale(pygame.image.load(f"gore/gore-{i}.png"), (100, 100)) for i in range(1, 4)]
+        # Gore images for stuff flying up and right
+        self.gore_images_45 = [pygame.transform.rotate(i, -90) for i in self.gore_images_135]
+        # Gore images for stuff flying down and right
+        self.gore_images_315 = [pygame.transform.rotate(i, -180) for i in self.gore_images_135]
+        # Gore images for stuff flying down and left
+        self.gore_images_225 = [pygame.transform.rotate(i, -270) for i in self.gore_images_135]
+    def create_gore(self, x0, y0, amount = 4, velocity = 40):
+        for i in range(amount):
+            angle = random.choice([45, 135, 225, 315])
+            self.gore_particles.append({
+                "angle": angle,
+                "image": random.choice(eval(f"self.gore_images_{angle}")),
+                "x": x0,
+                "y": y0,
+                "velocity": velocity,
+                "exists": 0
+            })
     def create_blood(self, x, y, parentXV=0):
         self.blood_particles.append( [x, y, 0, parentXV] )
     def create_explosion(self, x, y):
@@ -167,3 +195,25 @@ class ParticleManager:
             p[2]+=1
             if p[2] == 16:
                 self.explosion_particles.remove(p)
+        for p in self.gore_particles:
+            scr.blit(p["image"], (p["x"]-50, p["y"]-50))
+            p["exists"]+=1
+            p["image"].set_alpha(p["exists"]*16)
+            match p["angle"]:
+                case 45:
+                    p["x"]+=p["velocity"]
+                    p["y"]-=p["velocity"]
+                case 135:
+                    p["x"] -= p["velocity"]
+                    p["y"] -= p["velocity"]
+                case 225:
+                    p["x"] -= p["velocity"]
+                    p["y"] += p["velocity"]
+                case 315:
+                    p["x"] += p["velocity"]
+                    p["y"] += p["velocity"]
+                case _:
+                    raise Exception("It's called private field violation, dad!")
+        for p in self.gore_particles[:]:
+            if p["exists"] == 16:
+                self.gore_particles.remove(p)
