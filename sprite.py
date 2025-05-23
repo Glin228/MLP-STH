@@ -212,8 +212,6 @@ class ParticleManager:
                 case 315:
                     p["x"] += p["velocity"]
                     p["y"] += p["velocity"]
-                case _:
-                    raise Exception("It's called private field violation, dad!")
         for p in self.gore_particles[:]:
             if p["exists"] == 16:
                 self.gore_particles.remove(p)

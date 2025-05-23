@@ -173,9 +173,9 @@ def add_corpse(original):
         bg.blit(
             pygame.transform.scale(
                 pygame.image.load("corpse/avery-1.png"),
-                    (original.rheight*original.scale, original.rwidth*original.scale)
+                    (250, 100)
                     ),
-            (original.x, original.y)
+            (original.x, original.y+random.randint(10, 50))
         )
     elif x == Doomgay:
         bg.blit(
