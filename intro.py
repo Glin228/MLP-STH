@@ -18,7 +18,7 @@ STORY = [
     "But then 4chan users changed everything.",
     "At first, they wanted to criticize ponies, but in the end realized how beautiful they were.",
     "But not everyone was happy with that. More and more people called ponyposters 'cancer' and 'cringe'.",
-    "Soon ponyposting was banned. (cartoons are for kids) And bronies had to flee.",
+    "Soon ponyposting was banned. (cartoons be for kids) And bronies had to flee.",
     "Then Warhammer 40k fans started to attack something that once was a prosperous fandom.",
     "The energy of /pol/ started to rush into equestria, resulting in deadly mutations which irreversibly changed ponies",
     "turning them into nazis.",
@@ -28,7 +28,7 @@ STORY = [
     "Also they use magic and this is prohibited by the emperor therefore ponies are bad.",
     "Ponies are bad therefore they must all be exterminated.",
     "Very soon after the beginning of the invasion it became obvious that while friendship may be magic in this universe",
-    "those who want to kill ponies do not have soul and can't be neither loved nor tolerated. "
+    "those who want to kill ponies are soulless monsters and can't be neither loved nor tolerated. "
 ]
 
 def show_story():
