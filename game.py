@@ -168,8 +168,31 @@ class Bullet(sprite.Sprite):
         self.y-=self.vel*sin(self.deg)
 
 def add_corpse(original):
-    #Poh zavtra dodelayu
-    pass
+    x = type(original)
+    if x == Avery:
+        bg.blit(
+            pygame.transform.scale(
+                pygame.image.load("corpse/avery-1.png"),
+                    (original.rheight*original.scale, original.rwidth*original.scale)
+                    ),
+            (original.x, original.y)
+        )
+    elif x == Doomgay:
+        bg.blit(
+            pygame.transform.scale(
+                pygame.image.load("corpse/doomgay-1.png"),
+                    (original.rheight*original.scale, original.rwidth*original.scale)
+                    ),
+            (original.x, original.y)
+        )
+    elif x == Kosmodesantnik:
+        bg.blit(
+            pygame.transform.scale(
+                pygame.image.load("corpse/kosmodesantnik-1.png"),
+                (original.rheight * original.scale, original.rwidth * original.scale)
+            ),
+            (original.x, original.y)
+        )
 
 def check_bullets():
     global entities, score
@@ -187,9 +210,9 @@ def check_bullets():
                     pm.create_explosion(a.x, a.y)
                 entities.remove(a)
                 score+=10
-                add_corpse(b)
                 if b.health <= 0:
                     entities.remove(b)
+                    add_corpse(b)
                     score+=100
                     if not type(b) == Manhack:
                         pm.create_gore(b.x, b.y)
@@ -287,14 +310,14 @@ while running:
     performance = 0
     while time.time()-t0<=FPS:
         time.sleep(0.005)
-        """
+
         performance+=1
     l = sprite.Label(f"Performance: {performance}")
     l.x = 100
     l.y = 10
     l.blit(scr=screen)
     #print(len(entities))
-    """
+
     score_label.blit(scr=screen)
     score_label.text = str(score).zfill(6) + f"\n({highscore})"
     t0 = time.time()
