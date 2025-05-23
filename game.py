@@ -65,11 +65,19 @@ class Kosmodesantnik(sprite.Enemy):
         self.health = 25
         self.speed = -3
         self.t_last_attack = 0
+        self.t_last_bullet = 0
         self.children[1] = sprite.Label(random.choice(phrases.phrases_kosmodesantnik_normal))
     def change_phrases(self, newstate = "PAIN"):
         if newstate == self.phrase_state[0]: return
         self.phrase_state = (newstate, time.time()+8)
         self.children[1] = sprite.Label(random.choice(eval(f"phrases.phrases_kosmodesantnik_{self.phrase_state[0].lower()}")))
+    def attack(self):
+        self.speed = 0
+        self.pause_animation()
+        self.t_last_attack = time.time()
+    def stop_attack(self):
+        self.speed = -3
+        self.unpause_animation()
 
 class Avery(sprite.Enemy):
     def __init__(self):
@@ -144,11 +152,13 @@ FPS = 1/30
 running = True
 enemy_pain_sounds = [pygame.mixer.Sound(f"pain{i}.wav") for i in range(1, 7)]
 shoot_snd = pygame.mixer.Sound("shoot.wav")
+squadfire = pygame.mixer.Sound("squadfire.wav")
 pygame.mixer.music.load("05. Corrupted by Design.mp3")
 if "--nomusic" not in argv: pygame.mixer.music.play()
 #blood_particle = pygame.image.load("blood.png")
 pm = sprite.ParticleManager()
 pygame.mouse.set_visible(False)
+forcefield = sprite.Sprite("forcefield.png", 0.5)
 
 score = 0
 score_label = sprite.CustomFontLabel("", font=("Equestria.ttf", 30), color="#B58EBC")
@@ -161,6 +171,18 @@ class Bullet(sprite.Sprite):
         self.deg = rifle.deg
         self.x = rifle.x-17*sin(self.deg)
         self.y = rifle.y-17*cos(self.deg)
+        self.vel = 60
+        self.update()
+    def update(self):
+        self.x+=self.vel*cos(self.deg)
+        self.y-=self.vel*sin(self.deg)
+
+class EnemyBullet(sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__("bullet.png", scale=0.17)
+        self.deg = 180
+        self.x = x
+        self.y = y
         self.vel = 60
         self.update()
     def update(self):
@@ -193,6 +215,14 @@ def add_corpse(original):
             ),
             (original.x, original.y)
         )
+    elif x == Arianne:
+        bg.blit(
+            pygame.transform.scale(
+                pygame.image.load("corpse/arianne.png"),
+                (original.rwidth * original.scale, original.rheight/2 * original.scale)
+            ),
+            (original.x, original.y)
+        )
 
 def check_bullets():
     global entities, score
@@ -219,6 +249,13 @@ def check_bullets():
                 else:
                     b.change_phrases()
                 break
+    for a in entities[:]:
+        if not isinstance(a, EnemyBullet): continue
+        if a.collides(twilight):
+            if forcefield_activated:
+                entities.remove(a)
+            else:
+                die()
 
 def die():
     print("Dying...")
@@ -275,15 +312,43 @@ def update_aryannes():
         elif type(a) == Manhack:
             a.update()
 
+def update_kosmodesantniki():
+    global entities, running
+    while running:
+        #print("Govno")
+        for e in entities:
+            if type(e) != Kosmodesantnik:
+                continue
+            if e.speed < 0:
+                #Those who don't attack do this
+                if time.time() - e.t_last_attack > 6 and random.randint(1, 3) == 2 and running:
+                    squadfire.play()
+                    time.sleep(3)
+                    e.attack()
+            else:
+                if time.time() - e.t_last_bullet > 0.4:
+                    e.t_last_bullet = time.time()
+                    entities.append(EnemyBullet(e.x, e.y-10))
+                if time.time() - e.t_last_attack > 3:
+                    e.stop_attack()
+        time.sleep(1)
+
 enemySpawner = Thread(target=spawn_enemies)
 enemySpawner.start()
 last_bullet_shot = 0
 highscore = load_highscore()
+space_marine_handler = Thread(target=update_kosmodesantniki)
+space_marine_handler.start()
+
+forcefield.x = twilight.x
+forcefield.y = twilight.y
+forcefield_activated = False
 while running:
     t0 = time.time()
     twilight.blit(scr=screen)
     rifle.blit(scr=screen)
     rifle.rotate(calculate_angle((rifle.x, rifle.y), pygame.mouse.get_pos()))
+    if forcefield_activated: forcefield.blit(scr=screen)
     pygame.display.update()
     pygame.display.flip()
     screen.blit(bg, (0, 0))
@@ -298,7 +363,7 @@ while running:
 
     pm.blit(scr = screen)
 
-    if pygame.mouse.get_pressed()[0] and time.time()-last_bullet_shot>0.1:
+    if pygame.mouse.get_pressed()[0] and time.time()-last_bullet_shot>0.1 and not forcefield_activated:
         entities.append(Bullet())
         last_bullet_shot = time.time()
         shoot_snd.play()
@@ -326,6 +391,11 @@ while running:
         if ev.type == pygame.QUIT:
             running = False
             del enemySpawner
+            del space_marine_handler
+        if ev.type == pygame.KEYDOWN and ev.key == pygame.K_z:
+            forcefield_activated = True
+        elif ev.type == pygame.KEYUP and ev.key == pygame.K_z:
+            forcefield_activated = False
 
 save_highscore()
 import os

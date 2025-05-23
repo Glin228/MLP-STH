@@ -22,12 +22,13 @@ class Animation:
         self.interval = interval
         self.now = 0
         self.costumes = costumes
+        self.working = True
     def start(self):
         self.t0 = time.time()
         return self.costumes[0]
     def get(self):
         dt = time.time() - self.t0
-        if dt > self.interval:
+        if dt > self.interval and self.working:
             self.now+=1
             self.now = self.now%len(self.costumes)
             self.t0 = time.time()
@@ -90,6 +91,14 @@ class Sprite:
     def set_image(self, new):
         self.raw_image = pygame.image.load(new)
         self.rwidth, self.rheight = self.raw_image.get_size()
+    def pause_animation(self):
+        if type(self.raw_image) != Animation:
+            raise Exception(f"{self}'s raw image is not a Animation!")
+        self.raw_image.working = False
+    def unpause_animation(self):
+        if type(self.raw_image) != Animation:
+            raise Exception(f"{self}'s raw image is not a Animation!")
+        self.raw_image.working = True
 
 class Label:
     def __init__(self, text, font = ("Helvetica", 20), color = (0, 0, 0)):
