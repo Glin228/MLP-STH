@@ -39,7 +39,7 @@ def show_story():
     n = 0
     for i in STORY[n]:
         story_label.text+=i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n+=1
@@ -48,7 +48,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -57,7 +57,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -66,7 +66,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -75,7 +75,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -84,7 +84,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -93,7 +93,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -102,7 +102,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -111,7 +111,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -120,16 +120,16 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
     background = pygame.transform.scale(
-        pygame.image.load("intro/xenos.png"), GFX_MODE
+        pygame.image.load("intro/xenos.jpg"), GFX_MODE
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -138,7 +138,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -147,7 +147,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -156,7 +156,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1
@@ -165,7 +165,7 @@ def show_story():
     )
     for i in STORY[n]:
         story_label.text += i
-        time.sleep(0.1)
+        time.sleep(0.05)
     time.sleep(2)
     story_label.text = ""
     n += 1

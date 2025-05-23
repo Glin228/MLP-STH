@@ -153,8 +153,9 @@ running = True
 enemy_pain_sounds = [pygame.mixer.Sound(f"pain{i}.wav") for i in range(1, 7)]
 shoot_snd = pygame.mixer.Sound("shoot.wav")
 squadfire = pygame.mixer.Sound("squadfire.wav")
-pygame.mixer.music.load("05. Corrupted by Design.mp3")
-if "--nomusic" not in argv: pygame.mixer.music.play()
+enemyfire = pygame.mixer.Sound("enemy_fire.wav")
+#pygame.mixer.music.load("05. Corrupted by Design.mp3")
+#if "--nomusic" not in argv: pygame.mixer.music.play()
 #blood_particle = pygame.image.load("blood.png")
 pm = sprite.ParticleManager()
 pygame.mouse.set_visible(False)
@@ -321,7 +322,7 @@ def update_kosmodesantniki():
                 continue
             if e.speed < 0:
                 #Those who don't attack do this
-                if time.time() - e.t_last_attack > 6 and random.randint(1, 3) == 2 and running:
+                if time.time() - e.t_last_attack > 6 and random.randint(1, 3) == 2:
                     squadfire.play()
                     time.sleep(3)
                     e.attack()
@@ -329,9 +330,11 @@ def update_kosmodesantniki():
                 if time.time() - e.t_last_bullet > 0.4:
                     e.t_last_bullet = time.time()
                     entities.append(EnemyBullet(e.x, e.y-10))
+                    enemyfire.play()
                 if time.time() - e.t_last_attack > 3:
                     e.stop_attack()
         time.sleep(1)
+        if not running: return
 
 enemySpawner = Thread(target=spawn_enemies)
 enemySpawner.start()
