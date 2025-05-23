@@ -15,20 +15,20 @@ n = 0
 
 STORY = [
     "There once was peace and harmony in equestria.",
-    "But then 4chan users changed everything. ",
-    "It first seemed to be normal, and more and more people became really into horses.",
+    "But then 4chan users changed everything.",
+    "At first, they wanted to criticize ponies, but in the end realized how beautiful they were.",
     "But not everyone was happy with that. More and more people called ponyposters 'cancer' and 'cringe'.",
-    "Soon ponyposting was banned. And bronies had to flee. (cartoons are for kids)",
-    "And Warhammer 40k fans started to attack something that once was a prosperous fandom.",
+    "Soon ponyposting was banned. (cartoons are for kids) And bronies had to flee.",
+    "Then Warhammer 40k fans started to attack something that once was a prosperous fandom.",
     "The energy of /pol/ started to rush into equestria, resulting in deadly mutations which irreversibly changed ponies",
     "turning them into nazis.",
-    "The gamma ray spikes caused by this energy outburst, were noticed by the God Emperor of Mankind.",
+    "The gamma ray emissions caused by this energy outburst, were noticed by the God Emperor of Mankind.",
     "With the help of /wh/ users he quickly found the location of equestria planet.",
-    "Ponies aren't humans => they're Xenos => ponies are bad.",
-    "Also they use magic and this is prohibited by the emperor (because of course it is) => ponies are bad.",
-    "Ponies are bad => They must all be exterminated.",
+    "Ponies aren't humans therefore they're Xenos therefore ponies are bad.",
+    "Also they use magic and this is prohibited by the emperor therefore ponies are bad.",
+    "Ponies are bad therefore they must all be exterminated.",
     "Very soon after the beginning of the invasion it became obvious that while friendship may be magic in this universe",
-    "those who want to kill ponies can't be neither loved nor tolerated. "
+    "those who want to kill ponies do not have soul and can't be neither loved nor tolerated. "
 ]
 
 def show_story():
