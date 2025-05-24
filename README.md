@@ -27,6 +27,7 @@ $ ./linux_x64
 ## Music
 - "She is Yound She is Beautiful She is Next" by Perturbator
 - "Determination" by Toby Fox
+- Painkiller OST - Bear Me The Light
 
 ## Instructions
 Use mouse to aim, LMB click to shoot and [Z] key to activate the magic forcefield.
