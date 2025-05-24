@@ -4,7 +4,8 @@ phrases_enemy_normal = [
     "Why do you watch this?",
     "You are a grown ass man!",
     "You're a virgin!",
-    "Autism detected!"
+    "Autism detected!",
+    "Gas all horsefuckers!"
 ]
 
 phrases_aryanne_normal = [
