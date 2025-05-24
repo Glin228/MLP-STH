@@ -25,7 +25,7 @@ $ chmod +x linux_x64
 $ ./linux_x64
 ```
 ## Music
-- "She is Yound She is Beautiful She is Next" by Perturbator
+- "She is Young She is Beautiful She is Next" by Perturbator
 - "Determination" by Toby Fox
 - Painkiller OST - Bear Me The Light
 
