@@ -12,13 +12,13 @@ First go to python.org website and download the latest version of python. Clone 
 > pip install pygame-ce
 ```
 Then doubleclick the game.py file and it should work. If it doesn't try right-clicking the file and selecting "Open With IDLE" option. A window with game.py contents will open. Press F5 to run the game.
-### Linux
+### Linux and macOS
 Install python by following your distribution instructions. Clone this repository. Then install pygame-ce:
 ```bash
 $ pip3 install pygame-ce --break-system-packages
 $ python3 /path/to/game/game.py
 ```
-or
+or run the binary (only works on linux)
 ```bash
 $ cd /path/to/game
 $ chmod +x linux_x64
